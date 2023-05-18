@@ -1,4 +1,6 @@
-package com.litobumba.appgithub.data.api.dto
+package com.litobumba.appgithub.data.remote.github_api.dto
+
+import com.litobumba.appgithub.model.Repo
 
 data class RepoDto(
     val allow_forking: Boolean,
@@ -17,7 +19,7 @@ data class RepoDto(
     val created_at: String,
     val default_branch: String,
     val deployments_url: String,
-    val description: String,
+    val description: String?,
     val disabled: Boolean,
     val downloads_url: String,
     val events_url: String,
@@ -79,3 +81,14 @@ data class RepoDto(
     val watchers_count: Int,
     val web_commit_signoff_required: Boolean
 )
+
+fun RepoDto.toRepo(): Repo{
+    return Repo(
+        name = name,
+        description = description ?: "",
+        createAt = created_at,
+        stars = stargazers_count,
+        forks = forks_count,
+        watchers = watchers_count
+    )
+}

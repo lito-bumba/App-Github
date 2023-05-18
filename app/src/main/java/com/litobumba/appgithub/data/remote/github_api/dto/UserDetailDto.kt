@@ -1,8 +1,10 @@
-package com.litobumba.appgithub.data.api.dto
+package com.litobumba.appgithub.data.remote.github_api.dto
+
+import com.litobumba.appgithub.model.UserDetail
 
 data class UserDetailDto(
     val avatar_url: String,
-    val bio: Any,
+    val bio: String,
     val blog: String,
     val company: String,
     val created_at: String,
@@ -14,7 +16,6 @@ data class UserDetailDto(
     val following_url: String,
     val gists_url: String,
     val gravatar_id: String,
-    val hireable: Any,
     val html_url: String,
     val id: Int,
     val location: String,
@@ -34,3 +35,14 @@ data class UserDetailDto(
     val updated_at: String,
     val url: String
 )
+
+fun UserDetailDto.toUserDetail(): UserDetail {
+    return UserDetail(
+        userName = login,
+        name = name,
+        company = company,
+        location = location,
+        bio = bio,
+        image = avatar_url
+    )
+}

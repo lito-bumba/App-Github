@@ -1,4 +1,6 @@
-package com.litobumba.appgithub.data.api.dto
+package com.litobumba.appgithub.data.remote.github_api.dto
+
+import com.litobumba.appgithub.model.User
 
 data class UserDto(
     val avatar_url: String,
@@ -20,3 +22,11 @@ data class UserDto(
     val type: String,
     val url: String
 )
+
+fun UserDto.toUser(): User {
+    return User(
+        id = id,
+        login = login,
+        image = avatar_url
+    )
+}

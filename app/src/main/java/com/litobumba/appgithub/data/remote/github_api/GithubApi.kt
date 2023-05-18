@@ -1,8 +1,9 @@
-package com.litobumba.appgithub.data.api
+package com.litobumba.appgithub.data.remote.github_api
 
-import com.litobumba.appgithub.data.api.dto.RepoDto
-import com.litobumba.appgithub.data.api.dto.UserDto
-import com.litobumba.appgithub.model.UserDetail
+import com.litobumba.appgithub.common.Constants.PARAM_USERNAME
+import com.litobumba.appgithub.data.remote.github_api.dto.RepoDto
+import com.litobumba.appgithub.data.remote.github_api.dto.UserDetailDto
+import com.litobumba.appgithub.data.remote.github_api.dto.UserDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -12,8 +13,8 @@ interface GithubApi {
     suspend fun getUsers(): List<UserDto>
 
     @GET("users/{username}")
-    suspend fun getUserDetail(@Path("username") userName: String): UserDetail
+    suspend fun getUserDetail(@Path(PARAM_USERNAME) userName: String): UserDetailDto
 
     @GET("users/{username}/repos")
-    suspend fun getUserRepos(@Path("username") userName: String): List<RepoDto>
+    suspend fun getUserRepos(@Path(PARAM_USERNAME) userName: String): List<RepoDto>
 }
