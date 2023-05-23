@@ -1,4 +1,4 @@
-package com.litobumba.appgithub
+package com.litobumba.appgithub.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -51,8 +51,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-enum class Screen(route: String) {
-    INITIAL_SCREEN("initial_screen"),
-    LIST_USER("list_user"),
-    USER_DETAIL("user_detail")
+enum class Screen {
+    INITIAL_SCREEN,
+    LIST_USER,
+    USER_DETAIL
 }
