@@ -48,9 +48,9 @@ class ListUserViewModel(private val repository: UserRepository) : ViewModel() {
             try {
                 searchState.value = SearchUserState(user = repository.getUserDetail(userName))
             } catch (e: IOException) {
-                searchState.value = SearchUserState(error = "Erro na Conexão, Verifica a Conexão com a Internet")
+                searchState.value = SearchUserState(error = "Erro na Conexão\nVerifica a Conexão com a Internet")
             } catch (e: HttpException) {
-                searchState.value = SearchUserState(error = e.localizedMessage ?: "Erro na API")
+                searchState.value = SearchUserState(error = "Usuário não encontrado\nVerifica o nome de usuário")
             } catch (e: Exception) {
                 searchState.value = SearchUserState(error = e.localizedMessage ?: "Erro Desconhecido")
             }

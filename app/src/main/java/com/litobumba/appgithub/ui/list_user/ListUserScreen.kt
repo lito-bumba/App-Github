@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -89,7 +90,9 @@ fun ErrorScreen(
                 text = message,
                 style = MaterialTheme.typography.h5,
                 color = Color.Black,
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(16.dp)
+                    .fillMaxWidth()
             )
             IconButton(onClick = { onClick() }) {
                 Icon(
@@ -133,7 +136,6 @@ fun ListUserScreen(
         sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
         sheetContent = {
             val focusManager = LocalFocusManager.current
-            var isUserNotFound by remember { mutableStateOf(false) }
             val searchUserState = viewModel.searchState.value
 
             Column(
@@ -156,7 +158,6 @@ fun ListUserScreen(
                     value = searchUserState.textSearching,
                     onValueChange = {
                         viewModel.typingTextSearching(it)
-                        isUserNotFound = it == "user_not_found"
                     },
                     onClickClearIcon = { viewModel.typingTextSearching("") },
                     keyboardActions = {
