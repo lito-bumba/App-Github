@@ -27,6 +27,7 @@ fun UserDto.toUser(): User {
     return User(
         id = id,
         login = login,
-        image = avatar_url
+        image = avatar_url,
+        name = this.login
     )
 }

@@ -86,9 +86,6 @@ fun RepoDto.toRepo(): Repo{
     return Repo(
         name = name,
         description = description ?: "",
-        createAt = created_at,
-        stars = stargazers_count,
-        forks = forks_count,
-        watchers = watchers_count
+        stars = stargazers_count
     )
 }

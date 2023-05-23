@@ -40,7 +40,6 @@ fun UserDetailDto.toUserDetail(): UserDetail {
     return UserDetail(
         userName = login,
         name = name,
-        company = company,
         location = location,
         bio = bio,
         image = avatar_url
