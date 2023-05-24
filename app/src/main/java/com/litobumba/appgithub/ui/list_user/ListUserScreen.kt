@@ -98,6 +98,7 @@ fun ListUserScreen(
         sheetContent = {
             val focusManager = LocalFocusManager.current
             val searchUserState = viewModel.searchState.value
+            val textSearching = viewModel.textSearching.value
 
             Column(
                 modifier = Modifier
@@ -116,33 +117,27 @@ fun ListUserScreen(
                         .padding(16.dp)
                 )
                 InputSearch(
-                    value = searchUserState.textSearching,
+                    value = textSearching,
                     onValueChange = {
                         viewModel.typingTextSearching(it)
+                        viewModel.searchUser(it)
                     },
                     onClickClearIcon = { viewModel.typingTextSearching("") },
                     keyboardActions = {
-                        viewModel.searchUser(searchUserState.textSearching)
+                        viewModel.searchingStatus(true)
                         focusManager.clearFocus()
+                        searchUserState.user?.let { onClickToNavigate(it.toUser()) }
                     },
                     modifier = Modifier.fillMaxWidth(.8f)
                 )
 
-                if (searchUserState.error.isNotBlank()) {
+                if (searchUserState.error.isNotBlank() && searchUserState.isSearchDone) {
                     Text(
                         text = searchUserState.error,
                         color = Color.Red,
                         style = MaterialTheme.typography.h6,
                         modifier = Modifier.padding(16.dp)
                     )
-                }
-
-                if (searchUserState.isLoading) {
-                    CircularProgressIndicator()
-                }
-
-                if (searchUserState.user != null) {
-                    onClickToNavigate(searchUserState.user.toUser())
                 }
             }
         },

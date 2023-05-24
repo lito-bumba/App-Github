@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = Screen.LIST_USER.name) {
                             ListUserScreen {
-                                navController.navigate(Screen.USER_DETAIL.name + "?usrName=${it.login}")
+                                navController.navigate(Screen.USER_DETAIL.name + "?usrName=${it.userName}")
                             }
                         }
 

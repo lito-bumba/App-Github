@@ -25,8 +25,8 @@ data class UserDto(
 
 fun UserDto.toUser(): User {
     return User(
-        id = node_id,
-        login = login,
+        id = id,
+        userName = login,
         image = avatar_url
     )
 }

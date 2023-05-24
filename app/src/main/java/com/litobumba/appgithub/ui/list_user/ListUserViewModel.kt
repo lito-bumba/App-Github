@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.litobumba.appgithub.data.remote.RetrofitInit
 import com.litobumba.appgithub.data.repository.GithubRepositoryImpl
-import com.litobumba.appgithub.model.User
 import com.litobumba.appgithub.repository.UserRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -19,6 +18,9 @@ class ListUserViewModel(private val repository: UserRepository) : ViewModel() {
         private set
 
     var searchState = mutableStateOf(SearchUserState())
+        private set
+
+    var textSearching = mutableStateOf("")
         private set
 
     init {
@@ -47,23 +49,17 @@ class ListUserViewModel(private val repository: UserRepository) : ViewModel() {
     fun searchUser(userName: String) {
         viewModelScope.launch {
             try {
-                searchState.value = SearchUserState(
-                    textSearching = userName,
-                    user = repository.getUserDetail(userName)
-                )
+                searchState.value = SearchUserState(user = repository.getUserDetail(userName))
             } catch (e: IOException) {
                 searchState.value = SearchUserState(
-                    textSearching = userName,
                     error = "Erro na Conexão\nVerifica a Conexão com a Internet"
                 )
             } catch (e: HttpException) {
                 searchState.value = SearchUserState(
-                    textSearching = userName,
                     error = "Usuário não encontrado\nVerifica o nome de usuário"
                 )
             } catch (e: Exception) {
                 searchState.value = SearchUserState(
-                    textSearching = userName,
                     error = e.localizedMessage ?: "Erro Desconhecido"
                 )
             }
@@ -71,7 +67,12 @@ class ListUserViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     fun typingTextSearching(text: String) {
-        searchState.value = searchState.value.copy(textSearching = text)
+        textSearching.value = text
+        searchingStatus(false)
+    }
+
+    fun searchingStatus(status: Boolean){
+        searchState.value = searchState.value.copy(isSearchDone = status)
     }
 
     companion object {

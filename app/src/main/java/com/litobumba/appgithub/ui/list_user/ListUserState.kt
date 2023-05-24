@@ -10,8 +10,7 @@ data class ListUserState(
 )
 
 data class SearchUserState(
-    val textSearching: String = "",
-    val isLoading: Boolean = false,
+    val isSearchDone: Boolean = false,
     val user: UserDetail? = null,
     val error: String = ""
 )

@@ -38,9 +38,10 @@ data class UserDetailDto(
 
 fun UserDetailDto.toUserDetail(): UserDetail {
     return UserDetail(
-        userName = login,
-        name = name,
-        bio = bio ?: "",
-        image = avatar_url
+        id = this.id,
+        userName = this.login,
+        name = this.name,
+        bio = this.bio ?: "",
+        image = this.avatar_url
     )
 }

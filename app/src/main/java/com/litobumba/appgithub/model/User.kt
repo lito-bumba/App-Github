@@ -1,7 +1,7 @@
 package com.litobumba.appgithub.model
 
 data class User(
-    val id: String,
-    val login: String,
+    val id: Int,
+    val userName: String,
     val image: String
 )

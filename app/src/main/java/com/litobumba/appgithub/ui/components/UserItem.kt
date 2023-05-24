@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.litobumba.appgithub.model.User
@@ -44,12 +43,12 @@ fun UserItem(
             )
             Column(verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = user.login,
+                    text = user.userName,
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = user.id,
+                    text = user.id.toString(),
                     style = MaterialTheme.typography.subtitle1
                 )
             }

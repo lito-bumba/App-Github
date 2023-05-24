@@ -1,6 +1,7 @@
 package com.litobumba.appgithub.model
 
 data class UserDetail(
+    val id: Int,
     val userName: String,
     val name: String,
     val bio: String,
@@ -9,8 +10,8 @@ data class UserDetail(
 
 fun UserDetail.toUser(): User {
     return User(
-        id = "",
-        login = this.userName,
+        id = this.id,
+        userName = this.userName,
         image = this.image
     )
 }
