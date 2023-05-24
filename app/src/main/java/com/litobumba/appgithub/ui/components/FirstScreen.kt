@@ -1,4 +1,4 @@
-package com.litobumba.appgithub.ui
+package com.litobumba.appgithub.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

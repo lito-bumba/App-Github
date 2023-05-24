@@ -9,44 +9,42 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.litobumba.appgithub.model.Repo
 import com.litobumba.appgithub.model.UserDetail
+import com.litobumba.appgithub.ui.components.ErrorScreen
+import com.litobumba.appgithub.ui.components.LoadingScreen
 
-@Preview
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun UserDetailScreen(onClickToNavigate: () -> Unit = {}) {
+fun UserDetailScreen(
+    usrName: String,
+    viewModel: UserDetailViewModel = viewModel(factory = UserDetailViewModel.provideFactory(usrName = usrName)),
+    onClickToNavigate: () -> Unit = {}
+) {
     val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Concealed)
-    val repos = listOf(
-        Repo("Repositório Teste 1", "Testando Repositório", 10),
-        Repo("Repositório Teste 2", "Testando Repositório", 10),
-        Repo("Repositório Teste 3", "Testando Repositório", 10),
-        Repo("Repositório Teste 4", "Testando Repositório", 15),
-        Repo("Repositório Teste 31", "Testando Repositório", 12),
-        Repo("Repositório Teste 13", "Testando Repositório", 103),
-        Repo("Repositório Teste 12", "Testando Repositório", 101),
-        Repo("Repositório Teste 11", "Testando Repositório", 1),
-        Repo("Repositório Teste 33", "Testando Repositório", 0),
-    )
-    val userDetail = UserDetail(
-        userName = "lito-bumba",
-        image = "https://avatars.githubusercontent.com/u/90806272?v=4",
-        name = "Lito Bumba",
-        bio = "Android Developer | Jetpack Compose",
-        location = "Luanda"
-    )
+    val state = viewModel.state.value
+
+    if (state.isLoading){
+        LoadingScreen()
+        return
+    }
+
+    if (state.error.isNotBlank()){
+        ErrorScreen(message = state.error) {
+            viewModel.getUserDetailWithRepos(usrName)
+        }
+        return
+    }
 
     BackdropScaffold(
         appBar = {
@@ -59,16 +57,16 @@ fun UserDetailScreen(onClickToNavigate: () -> Unit = {}) {
                     )
                 }
             }, title = {
-                Text(text = "lito-bumba", color = Color.White)
+                Text(text = state.user.userName, color = Color.White)
             }, backgroundColor = Color.Transparent
             )
         },
         scaffoldState = scaffoldState,
         gesturesEnabled = false,
-        backLayerContent = { ProfileHeader(user = userDetail) },
+        backLayerContent = { ProfileHeader(user = state.user) },
         backLayerBackgroundColor = Color.Black,
         peekHeight = 250.dp,
-        frontLayerContent = { ReposScreen(repos = repos) },
+        frontLayerContent = { ReposScreen(repos = state.repos) },
         frontLayerBackgroundColor = Color.White,
         frontLayerShape = RoundedCornerShape(
             topStart = 30.dp, topEnd = 30.dp
@@ -93,7 +91,9 @@ private fun ReposScreen(repos: List<Repo>) {
                         fontWeight = FontWeight.Medium,
                     )
                     Text(
-                        text = "13", fontSize = 20.sp, fontWeight = FontWeight.Bold
+                        text = repos.count().toString(),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -108,9 +108,11 @@ private fun ReposScreen(repos: List<Repo>) {
 @Composable
 fun ProfileHeader(user: UserDetail) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .fillMaxHeight(.25f)
+            .fillMaxWidth()
+            .wrapContentHeight()
             .padding(16.dp)
     ) {
         AsyncImage(
@@ -136,33 +138,11 @@ fun ProfileHeader(user: UserDetail) {
                 color = Color.White,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = "Location",
-                    tint = Color.Red.copy(alpha = .6f),
-                    modifier = Modifier.padding(5.dp)
-                )
-                Text(
-                    text = user.location,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White,
-                    style = MaterialTheme.typography.subtitle1
-                )
-            }
-
             Text(
                 text = user.bio,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Justify,
                 style = MaterialTheme.typography.body1,
-                color = Color.White,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                color = Color.White
             )
         }
     }

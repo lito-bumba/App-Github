@@ -8,28 +8,29 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.litobumba.appgithub.model.User
+import com.litobumba.appgithub.model.toUser
+import com.litobumba.appgithub.ui.components.ErrorScreen
+import com.litobumba.appgithub.ui.components.LoadingScreen
+import com.litobumba.appgithub.ui.components.UserItem
 import com.litobumba.appgithub.ui.list_user.components.InputSearch
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 @Composable
 private fun ListUserContent(
-    onClickSearch: () -> Unit = {},
+    onClickSearch: () -> Unit,
     viewModel: ListUserViewModel,
-    onClickToNavigate: (User) -> Unit = {},
+    onClickToNavigate: (User) -> Unit,
 ) {
     val state = viewModel.state.value
 
@@ -61,46 +62,6 @@ private fun ListUserContent(
                 UserItem(user) {
                     onClickToNavigate(user)
                 }
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun ErrorScreen(
-    message: String = "Mensagem de Erro",
-    onClick: () -> Unit = {}
-) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            Icon(
-                imageVector = Icons.Default.Warning,
-                contentDescription = "Error",
-                tint = Color.Red,
-                modifier = Modifier.size(120.dp)
-            )
-            Text(
-                text = message,
-                style = MaterialTheme.typography.h5,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(16.dp)
-                    .fillMaxWidth()
-            )
-            IconButton(onClick = { onClick() }) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = "Error",
-                    tint = Color.Black,
-                    modifier = Modifier.size(60.dp)
-                )
             }
         }
     }
@@ -166,7 +127,8 @@ fun ListUserScreen(
                     },
                     modifier = Modifier.fillMaxWidth(.8f)
                 )
-                if (searchUserState.error.isNotEmpty() || searchUserState.error.isNotBlank()) {
+
+                if (searchUserState.error.isNotBlank()) {
                     Text(
                         text = searchUserState.error,
                         color = Color.Red,
@@ -174,17 +136,20 @@ fun ListUserScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
+
+                if (searchUserState.isLoading) {
+                    CircularProgressIndicator()
+                }
+
+                if (searchUserState.user != null) {
+                    onClickToNavigate(searchUserState.user.toUser())
+                }
             }
         },
         modifier = Modifier.fillMaxSize()
     ) {
         if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+            LoadingScreen()
         }
 
         if (state.users.isNotEmpty()) {

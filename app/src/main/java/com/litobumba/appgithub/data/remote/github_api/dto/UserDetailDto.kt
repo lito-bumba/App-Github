@@ -4,7 +4,7 @@ import com.litobumba.appgithub.model.UserDetail
 
 data class UserDetailDto(
     val avatar_url: String,
-    val bio: String,
+    val bio: String?,
     val blog: String,
     val company: String,
     val created_at: String,
@@ -40,8 +40,7 @@ fun UserDetailDto.toUserDetail(): UserDetail {
     return UserDetail(
         userName = login,
         name = name,
-        location = location,
-        bio = bio,
+        bio = bio ?: "",
         image = avatar_url
     )
 }
